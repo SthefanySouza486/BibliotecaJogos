@@ -1,1 +1,2 @@
-# Biblioteca de Jogos <img width="512" height="512" alt="image" src="https://github.com/user-attachments/assets/323e6adc-fb2c-48c7-837c-445f2c88f2a2" />
+# Biblioteca de Jogos 🎮
+Este projeto tem como objetivo oferecer uma aplicação para organizar uma coleçã de jogos, com funcionalidades como cadastro, consulta, edição e controle de empréstimo. É ideal para colecionadores ou para um sistema simples de locação de jogos. 
