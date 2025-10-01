@@ -1,0 +1,48 @@
+version: "3.8"
+
+services:
+  # Serviço do banco de dados PostgreSQL
+  db:
+    image: postgres:15
+    container_name: postgres-db
+    environment:
+      POSTGRES_USER: seu_usuario # Mesmo usuário do application-prod.properties
+      POSTGRES_PASSWORD: sua_senha # Mesma senha do application-prod.properties
+      POSTGRES_DB: bibliotecajogos # Mesmo nome do banco do application-prod.properties
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # Serviço da nossa aplicação
+  app:
+    build: . # Indica para construir a imagem a partir do Dockerfile no diretório atual
+    container_name: bibliotecajogos-app
+    depends_on:
+      - db # Garante que o serviço 'db' inicie antes do serviço 'app'
+    ports:
+      - "8080:8080"
+    environment:
+      # Sobrescreve as configurações para apontar para o container do banco de dados
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/bibliotecajogos
+      - SPRING_DATASOURCE_USERNAME=seu_usuario
+      - SPRING_DATASOURCE_PASSWORD=sua_senha
+      - SPRING_PROFILES_ACTIVE=prod # Ativa o perfil de produção
+
+  # NOVO SERVIÇO: pgAdmin
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin4-web
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "admin@admin.com"  # Email para login no pgAdmin
+      PGADMIN_DEFAULT_PASSWORD: "admin"         # Senha para login no pgAdmin
+    ports:
+      - "5050:80"  # Mapeia a porta 5050 do seu PC para a 80 do container
+    depends_on:
+      - db
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+
+volumes:
+  postgres_data:
+  pgadmin_data:  # Adiciona o volume para o pgAdmin
